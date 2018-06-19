@@ -30,28 +30,47 @@ targets = [1,5,5,6,8,8,3,6,7,8,5,6,7,6,7,8,2,10,11,11,9,9,14,16,15,19,4,16,17,18
                                40,41,41,40,41,40]
 
 def get_edge_list():
-	edge_list = {}
-	for i, _ in enumerate(sources):
-		s = sources[i]
-		t = targets[i]
-		if (not countries[s] in edge_list):
-			edge_list[countries[s]] = []
-		if (not countries[t] in edge_list):
-			edge_list[countries[t]] = []
-		edge_list[countries[s]].append(countries[t])
-		edge_list[countries[t]].append(countries[s])
-	return edge_list
+    edge_list = {}
+    for i, _ in enumerate(sources):
+        s = sources[i]
+        t = targets[i]
+        if (not countries[s] in edge_list):
+            edge_list[countries[s]] = []
+        if (not countries[t] in edge_list):
+            edge_list[countries[t]] = []
+        edge_list[countries[s]].append(countries[t])
+        edge_list[countries[t]].append(countries[s])
+    return edge_list
 
 class Country:
-	def __init__(self, neighbors, continent):
-		self.neighbors = neighbors
-		self.continent = continent
+    def __init__(self, name, neighbors, continent):
+        self.name = name
+        self.neighbors = neighbors
+        self.continent = continent
+    def __str__(self):
+        return self.name + str(self.neighbors)
 
 class Board:
-	def __init__(self):
-		self.edge_list = get_edge_list()
-		self.countries = countries
+    def __init__(self, countries):
+        self.countries = countries
 
 
-b = Board()
-print b.edge_list
+edges = get_edge_list()
+stringCountryMap = {}
+for i, country in enumerate(edges):
+    c = Country(country, [], continents[i])
+    stringCountryMap[country] = c
+
+countryObs = []
+for country in stringCountryMap:
+    c = stringCountryMap[country]
+    for neighbor in edges[country]:
+        c.neighbors.append(stringCountryMap[neighbor])
+    countryObs.append(c)
+board = Board(countryObs)
+
+print(max(board.countries, key=lambda x: len(x.neighbors)))
+
+
+
+        
